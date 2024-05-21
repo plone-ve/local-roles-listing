@@ -1,16 +1,23 @@
-# Print all objects visible to the currently logged in user
-from Products.CMFCore.utils import getToolByName
+'''Print all objects visible to the currently logged in user in Plone 6'''
+from plone import api
 
 
-catalog = getToolByName(context, 'portal_catalog')    
+# Retrieve all content items from the site using the catalog tool
+catalog = api.portal.get_tool('portal_catalog')
 
-# Print all content on the site
+# Iterate over each content item, referred to as 'brain'
 all_brains = catalog()
+# Iterate on all brains
 for brain in all_brains:
+    # Obtain the brain local roles
     roles = brain.getObject().get_local_roles()
+    # Verify if the brain has roles
     if roles:
-        for (g,r) in roles:
-             if r != ('Owner',):
-                 print str(roles) + ", " + str(brain.getPath()) 
+        # Iterate about the brain roles
+        for (group, role) in roles:
+            # Verify if the role is not 'Owner'
+            if role != ('Owner',):
+                # Print the brain roles and route
+                print(str(roles) + ", " + str(brain.getPath()))
 
-return printed
+# return printed
